@@ -1,0 +1,103 @@
+/*
+ * Reply Radar theme tokens — two modes, dark (primary) and light.
+ *
+ * Mode is set via `data-theme="dark" | "light"` on <html>. Default dark.
+ * There is no multi-direction switcher; this is the only direction.
+ */
+
+/* ── Constant tokens (shared across both modes) ──────────────────────── */
+:root {
+  /* Faces + display treatment */
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-ui: "Public Sans", system-ui, sans-serif;
+  --display-weight: 700;
+  --display-spacing: -0.02em;
+  --label-transform: uppercase;
+  --label-spacing: 0.15em;
+
+  /* Geometry */
+  --radius: 7px;
+
+  /* Conversation type dots — fixed hex, do not shift between modes */
+  --type-question: #6ea8fe;
+  --type-discussion: #c0a3ff;
+  --type-painpoint: #ffb05c;
+
+  /* Status / action colors that are fixed hex (edited = amber warn) */
+  --status-edited-bg: rgba(255, 176, 92, 0.16);
+  --status-edited-text: #e7a04f;
+}
+
+/* ── Dark (PRIMARY): themes.signal.modes.dark ────────────────────────── */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Background world (darkest -> lightest) */
+  --bg-0: #08080a;
+  --bg-1: #0d0d0f;
+  --bg-2: #141417;
+  --bg-3: #1c1c21;
+  --bg-sel: #222229;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-2: rgba(255, 255, 255, 0.16);
+
+  /* Text */
+  --text-1: #f5f5f7;
+  --text-2: #9d9da7;
+  --text-3: #65656f;
+
+  /* Accent (electric lime fill, near-black text on it) */
+  --accent: #c8f24e;
+  --accent-text: #0d0d0f;
+  --accent-soft: rgba(200, 242, 78, 0.14);
+
+  /* Elevation */
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.6), 0 14px 40px rgba(0, 0, 0, 0.5);
+
+  /* Per-source tints (SRC_DARK) */
+  --src-reddit: #ff6a3d;
+  --src-hn: #ffa14a;
+  --src-ih: #4f8cff;
+  --src-devto: #3fb950;
+  --src-x: #d7dce4;
+}
+
+/* ── Light: themes.signal.modes.light ────────────────────────────────── */
+/* The accent relationship INVERTS: fill is near-black, on-accent text is lime. */
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Background world — note bg-2 is the lightest (cards pop white),
+     bg-0 is the darkest (chrome). */
+  --bg-0: #e7e7e9;
+  --bg-1: #f3f3f4;
+  --bg-2: #fbfbfc;
+  --bg-3: #ededf0;
+  --bg-sel: #e6e6ea;
+
+  /* Borders */
+  --border: rgba(0, 0, 0, 0.1);
+  --border-2: rgba(0, 0, 0, 0.2);
+
+  /* Text */
+  --text-1: #0c0c0f;
+  --text-2: #56565e;
+  --text-3: #84848d;
+
+  /* Accent (INVERTED): near-black fill, lime text/icon on it */
+  --accent: #13131a;
+  --accent-text: #d6f25a;
+  --accent-soft: rgba(19, 19, 26, 0.06);
+
+  /* Elevation */
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 14px 36px rgba(0, 0, 0, 0.1);
+
+  /* Per-source tints (SRC_LIGHT) */
+  --src-reddit: #e6491a;
+  --src-hn: #cf7a17;
+  --src-ih: #2d6fd6;
+  --src-devto: #2da44e;
+  --src-x: #2a2f37;
+}

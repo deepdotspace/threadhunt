@@ -1,0 +1,12 @@
+node_modules
+dist
+.wrangler
+.dev.vars
+.deepspace
+.worker-bundle.js
+*.tgz
+test-results
+
+# Local build and publish coordination, not part of the published app
+BUILD.md
+PUBLISH.md

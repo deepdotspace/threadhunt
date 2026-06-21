@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--
+  Reply Radar — keyboard-first reply triage. Dark is the primary theme; the
+  persisted mode is applied before first paint by the inline boot script
+  below (no FOUC). Mode values live in src/themes.css.
+-->
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>Reply Radar</title>
+
+    <!-- Display = Space Grotesk, UI = Public Sans (both 400/500/600/700). -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      // Apply the persisted mode (default dark) before first paint.
+      (function () {
+        try {
+          var m = localStorage.getItem('reply-radar-theme')
+          if (m !== 'light') m = 'dark'
+          document.documentElement.setAttribute('data-theme', m)
+          document.documentElement.style.colorScheme = m
+        } catch (e) {}
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

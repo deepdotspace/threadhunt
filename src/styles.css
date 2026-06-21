@@ -1,0 +1,181 @@
+@import "tailwindcss" source(none);
+@import "./themes.css";
+
+/* Scan local source + SDK components for Tailwind class usage */
+@source "./**/*.{ts,tsx}";
+@source "../node_modules/deepspace/dist/**/*.js";
+
+/*
+ * Reply Radar design tokens -> Tailwind v4 utilities.
+ *
+ * The actual color values live in themes.css per mode ([data-theme]).
+ * Here we register each token as a Tailwind color/var so utilities like
+ * `bg-bg-1`, `text-text-2`, `border-border`, `text-accent` are generated
+ * and resolve to the live CSS variable (so they re-theme at runtime).
+ */
+@theme {
+  /* Backgrounds */
+  --color-bg-0: var(--bg-0);
+  --color-bg-1: var(--bg-1);
+  --color-bg-2: var(--bg-2);
+  --color-bg-3: var(--bg-3);
+  --color-bg-sel: var(--bg-sel);
+
+  /* Borders */
+  --color-border: var(--border);
+  --color-border-2: var(--border-2);
+
+  /* Text */
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+
+  /* Accent */
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-soft: var(--accent-soft);
+
+  /* Per-source tints */
+  --color-src-reddit: var(--src-reddit);
+  --color-src-hn: var(--src-hn);
+  --color-src-quora: var(--src-quora);
+  --color-src-so: var(--src-so);
+  --color-src-x: var(--src-x);
+
+  /* Type dots */
+  --color-type-question: var(--type-question);
+  --color-type-discussion: var(--type-discussion);
+  --color-type-painpoint: var(--type-painpoint);
+
+  /* Status (edited) */
+  --color-status-edited-bg: var(--status-edited-bg);
+  --color-status-edited-text: var(--status-edited-text);
+
+  /* Faces — concrete stacks so Tailwind emits `font-display` / `font-ui`
+     utilities. The same stacks are mirrored as raw vars in themes.css. */
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-ui: "Public Sans", system-ui, sans-serif;
+
+  /* Keyframe-driven animations (defined below) */
+  --animate-rs-spin: rs-spin 1s linear infinite;
+  --animate-rs-shimmer: rs-shimmer 1.3s linear infinite;
+  --animate-rs-in: rs-in 0.18s ease;
+  --animate-rs-toast: rs-toast 0.22s ease;
+  --animate-rs-pulse: rs-pulse 1.6s ease-in-out infinite;
+
+  /*
+   * Backward-compat: shadcn-style color tokens mapped onto Reply Radar tokens.
+   * Scaffold components and the as-yet-unbuilt screens still use utilities
+   * like `bg-card` / `text-muted-foreground`; these keep them rendering in
+   * Reply Radar colors so the build stays coherent. New Reply Radar UI uses the
+   * `bg-bg-1` / `text-accent` token names above directly.
+   */
+  --color-background: var(--bg-1);
+  --color-foreground: var(--text-1);
+  --color-card: var(--bg-2);
+  --color-card-foreground: var(--text-1);
+  --color-popover: var(--bg-2);
+  --color-popover-foreground: var(--text-1);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--accent-text);
+  --color-secondary: var(--bg-2);
+  --color-secondary-foreground: var(--text-1);
+  --color-muted: var(--bg-2);
+  --color-muted-foreground: var(--text-2);
+  --color-accent-foreground: var(--accent-text);
+  --color-destructive: var(--status-edited-text);
+  --color-destructive-foreground: var(--bg-1);
+  --color-input: var(--border-2);
+  --color-ring: var(--accent);
+  --color-success: var(--accent);
+  --color-success-foreground: var(--accent-text);
+  --color-warning: var(--status-edited-text);
+  --color-warning-foreground: var(--bg-1);
+  --color-info: var(--text-2);
+  --color-info-foreground: var(--bg-1);
+}
+
+/*
+ * Reply Radar motion keyframes (mirrors the prototype's <helmet> styles).
+ */
+@keyframes rs-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes rs-shimmer {
+  0% { background-position: -300px 0; }
+  100% { background-position: 300px 0; }
+}
+@keyframes rs-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes rs-toast {
+  from { opacity: 0; transform: translate(-50%, 14px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes rs-ring {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+@keyframes rs-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* Tabular numerals for counts / scores / times so digits align. */
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Base styles — Reply Radar root + the one coherent background world.
+ */
+@layer base {
+  html {
+    /* Default; the boot script + toggle override per persisted mode. */
+    color-scheme: dark;
+  }
+
+  html, body, #root {
+    min-height: 100vh;
+  }
+
+  body {
+    /* Matches Reply Radar dark --bg-1; light mode re-themes via the variable. */
+    background: var(--bg-1);
+    color: var(--text-1);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Thin custom scrollbars — token-driven, no hard gray boxes. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: var(--border-2);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-3);
+  }
+
+  /* Lime selection wash (in light it is the faint dark accent-soft). */
+  ::selection {
+    background: var(--accent-soft);
+  }
+
+  /* Prevent 300ms tap delay on mobile */
+  a, button, [role="button"], input, select, textarea {
+    touch-action: manipulation;
+  }
+}
