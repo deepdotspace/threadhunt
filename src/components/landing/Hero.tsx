@@ -33,9 +33,7 @@ export function Hero({ onGetStarted }: { onGetStarted: () => void }) {
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         >
           <div className="flex items-center gap-2.5">
-            <span className="grid h-8 w-8 place-content-center rounded-[6px] bg-[var(--accent)] font-display text-[18px] font-bold text-[var(--accent-text)]">
-              {BRAND.glyph}
-            </span>
+            <img src="/favicon.svg" alt="" className="h-8 w-8 rounded-[6px]" />
             <span className="font-display text-[18px] font-bold tracking-[-0.02em] text-[var(--text-1)]">
               {BRAND.name}
             </span>

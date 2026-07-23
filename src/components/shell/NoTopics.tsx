@@ -5,17 +5,16 @@
  */
 
 import { Link } from 'react-router-dom'
-import { BRAND } from '../../themes'
 
 export function NoTopics() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center px-6 text-center [animation:rs-in_0.3s_ease]">
-      <span
-        className="mb-6 grid h-[66px] w-[66px] place-content-center rounded-[7px] bg-accent font-display text-[34px] font-bold leading-none text-accent-text"
+      <img
+        src="/favicon.svg"
+        alt=""
+        className="mb-6 h-[66px] w-[66px] rounded-[7px]"
         aria-hidden
-      >
-        {BRAND.glyph}
-      </span>
+      />
       <h1 className="font-display text-[24px] font-bold tracking-[-0.02em] text-text-1">
         Create your first topic
       </h1>

@@ -5,7 +5,6 @@
 
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import { BRAND } from '../../themes'
 import { useReducedMotion } from './motion'
 
 export function ClosingCTA({ onGetStarted }: { onGetStarted: () => void }) {
@@ -29,9 +28,7 @@ export function ClosingCTA({ onGetStarted }: { onGetStarted: () => void }) {
           />
         )}
         <div className="relative">
-          <span className="mx-auto grid h-11 w-11 place-content-center rounded-[var(--radius)] bg-[var(--accent)] font-display text-[22px] font-bold text-[var(--accent-text)]">
-            {BRAND.glyph}
-          </span>
+          <img src="/favicon.svg" alt="" className="mx-auto h-11 w-11 rounded-[var(--radius)]" />
           <h2 className="mx-auto mt-6 max-w-[560px] font-display text-[32px] font-bold leading-tight tracking-[-0.02em] text-[var(--text-1)] sm:text-[40px]">
             Stop scrolling for threads. Start triaging them.
           </h2>

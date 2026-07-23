@@ -10,9 +10,7 @@ export function LandingFooter() {
     <footer className="border-t border-[var(--border)] bg-[var(--bg-0)]">
       <div className="mx-auto flex w-full max-w-[1240px] flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between lg:px-10">
         <div className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-content-center rounded-[6px] bg-[var(--accent)] font-display text-[15px] font-bold text-[var(--accent-text)]">
-            {BRAND.glyph}
-          </span>
+          <img src="/favicon.svg" alt="" className="h-7 w-7 rounded-[6px]" />
           <div>
             <div className="font-display text-[14px] font-bold tracking-[-0.02em] text-[var(--text-1)]">
               {BRAND.name}

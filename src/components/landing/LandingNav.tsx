@@ -33,9 +33,7 @@ export function LandingNav({ onGetStarted }: { onGetStarted: () => void }) {
     >
       <div className="mx-auto flex h-14 w-full max-w-[1240px] items-center gap-3 px-6 lg:px-10">
         <a href="#top" className="flex items-center gap-2.5">
-          <span className="grid h-7 w-7 place-content-center rounded-[6px] bg-[var(--accent)] font-display text-[15px] font-bold text-[var(--accent-text)]">
-            {BRAND.glyph}
-          </span>
+          <img src="/favicon.svg" alt="" className="h-7 w-7 rounded-[6px]" />
           <span className="font-display text-[16px] font-bold tracking-[-0.02em] text-[var(--text-1)]">
             {BRAND.name}
           </span>

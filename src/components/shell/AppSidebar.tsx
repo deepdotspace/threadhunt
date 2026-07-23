@@ -92,12 +92,7 @@ export function AppSidebar() {
         onClick={() => navigate('/landing')}
         className="mb-3 flex items-center gap-2.5 text-left"
       >
-        <span
-          className="grid h-[30px] w-[30px] place-content-center rounded-[6px] bg-accent font-display text-[17px] font-bold leading-none text-accent-text"
-          aria-hidden
-        >
-          {BRAND.glyph}
-        </span>
+        <img src="/favicon.svg" alt="" className="h-[30px] w-[30px] rounded-[6px]" aria-hidden />
         <span className="flex flex-col">
           <span className="font-display text-[16px] font-bold leading-[1.1] tracking-[-0.02em] text-text-1">
             {BRAND.name}
