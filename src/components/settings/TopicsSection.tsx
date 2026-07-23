@@ -19,7 +19,7 @@ export function TopicsSection() {
   return (
     <Section
       title="Topics"
-      description="Manage what Reply Radar scans for. Pause a topic to stop its scans without deleting it."
+      description="Manage what ThreadHunt scans for. Pause a topic to stop its scans without deleting it."
       actions={
         <Button variant="secondary" size="sm" asChild>
           <Link to="/new-topic">New topic</Link>

@@ -1,5 +1,5 @@
 /**
- * Reply Radar config. The single editable source for prompts, model ids, funnel
+ * ThreadHunt config. The single editable source for prompts, model ids, funnel
  * tunables, and defaults. The founder tunes numbers here without hunting
  * through code.
  */

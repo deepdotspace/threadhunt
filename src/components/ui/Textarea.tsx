@@ -3,7 +3,7 @@ import * as React from 'react'
 import { cn } from './utils'
 
 /*
- * Reply Radar textarea. Raised bg-2 surface, stronger hairline border, accent
+ * ThreadHunt textarea. Raised bg-2 surface, stronger hairline border, accent
  * border on focus. 14px / 1.5 line-height per the New Topic + reply specs.
  */
 const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<'textarea'>>(

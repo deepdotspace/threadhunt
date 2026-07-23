@@ -1,7 +1,7 @@
 /*
  * The hero product mock: a live-feeling two-pane triage client. Rows arrive,
  * one stays selected, a draft shimmers then types in, and the demo skips a row
- * with an undo toast on a loop. Faithful to the Reply Radar queue anatomy, scaled
+ * with an undo toast on a loop. Faithful to the ThreadHunt queue anatomy, scaled
  * down to fit the hero. Honors prefers-reduced-motion (no looping, draft shown).
  */
 

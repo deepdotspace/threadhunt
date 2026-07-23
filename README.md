@@ -1,10 +1,10 @@
-# Reply Radar
+# ThreadHunt
 
-Reply Radar finds online discussions worth replying to, drafts a reply with AI, and lets you post it by hand. It watches the topics you care about across Reddit, Hacker News, X, Indie Hackers, and Dev.to, scores how good each match is, and gives you a fast, keyboard-first queue to triage.
+ThreadHunt finds online discussions worth replying to, drafts a reply with AI, and lets you post it by hand. It watches the topics you care about across Reddit, Hacker News, X, Indie Hackers, and Dev.to, scores how good each match is, and gives you a fast, keyboard-first queue to triage.
 
 This is the open personal edition: a single-tenant tool you deploy on your own [DeepSpace](https://docs.deep.space) account in about three commands. You are the only user and the owner, so there is no billing, no credits, and no paywall. Scans and drafts just run, and any AI usage is billed to your own DeepSpace account.
 
-> The product name in this code defaults to "Reply Radar". The GitHub repository is named `threadhunt`. Rename the product to whatever you like before you deploy (see below).
+> The product name in this code defaults to "ThreadHunt". The GitHub repository is named `threadhunt`. Rename the product to whatever you like before you deploy (see below).
 
 ## Before you deploy: set your app name
 
@@ -52,13 +52,13 @@ npx deepspace dev       # local dev server
 
 ## Features
 
-- **Topics:** describe what you want to find; Reply Radar watches your chosen venues for matching threads.
+- **Topics:** describe what you want to find; ThreadHunt watches your chosen venues for matching threads.
 - **Five venues:** Reddit, Hacker News, X, Indie Hackers, and Dev.to. Pick which ones each topic watches.
 - **Background scan engine:** each scan runs as a DeepSpace background job with per-venue search, recency windows, and batched AI judging against your topic, so candidates stream into your queue as they are found.
 - **Match scoring:** a compact three-bar indicator shows how strong each match is.
 - **Keyboard-first triage:** a dense queue with a detail pane. Review a candidate, read the AI-drafted reply, open the source thread, and act without leaving the keyboard.
 - **Model picker:** draft each reply with Haiku, Sonnet, or Opus, with a per-reply instruction to steer the voice.
-- **Post by hand:** Reply Radar drafts; you always post the reply yourself. Nothing is auto-posted.
+- **Post by hand:** ThreadHunt drafts; you always post the reply yourself. Nothing is auto-posted.
 - **Scheduling:** topics rescan on a cadence you set, or scan now on demand.
 - **History:** every action, grouped by day or topic, with CSV and JSON export.
 - **Dark, focused UI** built for triage sessions.

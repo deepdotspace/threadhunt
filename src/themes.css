@@ -1,5 +1,5 @@
 /*
- * Reply Radar theme tokens — two modes, dark (primary) and light.
+ * ThreadHunt theme tokens — two modes, dark (primary) and light.
  *
  * Mode is set via `data-theme="dark" | "light"` on <html>. Default dark.
  * There is no multi-direction switcher; this is the only direction.

@@ -20,7 +20,7 @@ export function NoTopics() {
       </h1>
       <p className="mt-3 max-w-[420px] text-[14px] leading-relaxed text-text-3">
         A topic is something you want to find conversations about. Answer two
-        questions and Reply Radar starts scanning for threads worth replying to.
+        questions and ThreadHunt starts scanning for threads worth replying to.
       </p>
       <Link
         to="/new-topic"

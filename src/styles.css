@@ -6,7 +6,7 @@
 @source "../node_modules/deepspace/dist/**/*.js";
 
 /*
- * Reply Radar design tokens -> Tailwind v4 utilities.
+ * ThreadHunt design tokens -> Tailwind v4 utilities.
  *
  * The actual color values live in themes.css per mode ([data-theme]).
  * Here we register each token as a Tailwind color/var so utilities like
@@ -64,10 +64,10 @@
   --animate-rs-pulse: rs-pulse 1.6s ease-in-out infinite;
 
   /*
-   * Backward-compat: shadcn-style color tokens mapped onto Reply Radar tokens.
+   * Backward-compat: shadcn-style color tokens mapped onto ThreadHunt tokens.
    * Scaffold components and the as-yet-unbuilt screens still use utilities
    * like `bg-card` / `text-muted-foreground`; these keep them rendering in
-   * Reply Radar colors so the build stays coherent. New Reply Radar UI uses the
+   * ThreadHunt colors so the build stays coherent. New ThreadHunt UI uses the
    * `bg-bg-1` / `text-accent` token names above directly.
    */
   --color-background: var(--bg-1);
@@ -96,7 +96,7 @@
 }
 
 /*
- * Reply Radar motion keyframes (mirrors the prototype's <helmet> styles).
+ * ThreadHunt motion keyframes (mirrors the prototype's <helmet> styles).
  */
 @keyframes rs-spin {
   to { transform: rotate(360deg); }
@@ -128,7 +128,7 @@
 }
 
 /*
- * Base styles — Reply Radar root + the one coherent background world.
+ * Base styles — ThreadHunt root + the one coherent background world.
  */
 @layer base {
   html {
@@ -141,7 +141,7 @@
   }
 
   body {
-    /* Matches Reply Radar dark --bg-1; light mode re-themes via the variable. */
+    /* Matches ThreadHunt dark --bg-1; light mode re-themes via the variable. */
     background: var(--bg-1);
     color: var(--text-1);
     font-family: var(--font-ui);

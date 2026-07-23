@@ -2,7 +2,7 @@ import type { CollectionSchema } from 'deepspace/worker'
 
 // All writes happen server-side (cron owner context or server actions, which
 // bypass RBAC), so clients are read-only. Reads are scoped to the owner via
-// ownerUserId for everyone, including admin: Reply Radar is single-user-per-account,
+// ownerUserId for everyone, including admin: ThreadHunt is single-user-per-account,
 // so no client surface shows another user's topics.
 export const topicsSchema: CollectionSchema = {
   name: 'topics',

@@ -1,5 +1,5 @@
 /*
- * Hero: the Reply Radar mark + wordmark, a grounded value prop, the primary CTA,
+ * Hero: the ThreadHunt mark + wordmark, a grounded value prop, the primary CTA,
  * the keyboard-first cue, and the animated triage demo. An ambient lime glow
  * drifts behind the demo for depth without a texture image.
  */
@@ -48,7 +48,7 @@ export function Hero({ onGetStarted }: { onGetStarted: () => void }) {
           </h1>
 
           <p className="mt-5 max-w-[480px] text-[15.5px] leading-relaxed text-[var(--text-2)]">
-            Reply Radar scans Reddit, Hacker News, X, Indie Hackers, and Dev.to for
+            ThreadHunt scans Reddit, Hacker News, X, Indie Hackers, and Dev.to for
             conversations where your product genuinely helps, scores each one, and
             drafts a reply. You read the thread, edit the draft, and post it
             yourself. It never posts for you.

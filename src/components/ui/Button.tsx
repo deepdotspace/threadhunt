@@ -5,7 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from './utils'
 
 /*
- * Reply Radar buttons. Primary = accent fill with on-accent text (lime/black in
+ * ThreadHunt buttons. Primary = accent fill with on-accent text (lime/black in
  * dark, black/lime in light). Secondary = raised bg-2 surface. Ghost = bare.
  * Display weight 700 on primary, 600 on secondary, per the design spec.
  */

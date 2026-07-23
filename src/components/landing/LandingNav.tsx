@@ -1,5 +1,5 @@
 /*
- * Landing top bar: sticky, hairline-bordered, with the Reply Radar mark, anchor
+ * Landing top bar: sticky, hairline-bordered, with the ThreadHunt mark, anchor
  * links, the theme toggle, and the primary CTA. Backdrop blurs on scroll.
  */
 

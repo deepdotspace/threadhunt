@@ -88,7 +88,7 @@ export const PIPELINE = [
   {
     key: 'scan',
     label: 'Scan',
-    line: 'Reply Radar searches your venues on a schedule and reads what it finds.',
+    line: 'ThreadHunt searches your venues on a schedule and reads what it finds.',
   },
   {
     key: 'judge',

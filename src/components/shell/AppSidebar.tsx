@@ -1,5 +1,5 @@
 /*
- * Reply Radar left sidebar: 268px fixed, bg-0, hairline right
+ * ThreadHunt left sidebar: 268px fixed, bg-0, hairline right
  * border. App mark + wordmark, New topic button, the TOPICS list (unread count
  * + honest scanning indicator), bottom History/Settings nav, account + theme.
  */

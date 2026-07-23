@@ -1,5 +1,5 @@
 /*
- * Venues: the five places Reply Radar reads. Animated source chips drift on a loop
+ * Venues: the five places ThreadHunt reads. Animated source chips drift on a loop
  * and a sample query "fans out" to each venue to show the one-mechanism search.
  */
 

@@ -1,7 +1,7 @@
 import { cn } from '../ui'
 
 /*
- * Reply Radar segmented control. bg-2 track, the active button
+ * ThreadHunt segmented control. bg-2 track, the active button
  * lifts to bg-1; inactive buttons read muted.
  */
 export interface SegmentedOption<T extends string> {

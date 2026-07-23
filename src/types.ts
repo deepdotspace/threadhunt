@@ -1,5 +1,5 @@
 /**
- * Reply Radar data model.
+ * ThreadHunt data model.
  *
  * The `*Data` shapes are the values stored under a record envelope's `.data`.
  * Every record is `{ recordId, data: T, createdBy, createdAt, updatedAt }`;

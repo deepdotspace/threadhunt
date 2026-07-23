@@ -5,7 +5,7 @@ import { Check } from 'lucide-react'
 import { cn } from './utils'
 
 /*
- * Reply Radar checkbox. Off = empty box with a border-2 hairline; on = accent fill
+ * ThreadHunt checkbox. Off = empty box with a border-2 hairline; on = accent fill
  * with an on-accent check. 16px square per the venue-toggle spec.
  */
 const Checkbox = React.forwardRef<

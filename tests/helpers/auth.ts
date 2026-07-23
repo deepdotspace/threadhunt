@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test'
 
 /**
- * Test account for the signed-in specs. Reply Radar disables public sign-up, so
+ * Test account for the signed-in specs. ThreadHunt disables public sign-up, so
  * those specs need a pre-provisioned account. Create one once with
  * `npx deepspace test-accounts create` and expose it via env:
  *   APP_TEST_EMAIL / APP_TEST_PASSWORD

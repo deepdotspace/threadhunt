@@ -1,5 +1,5 @@
 /*
- * Landing footer: mark, one honest line about what Reply Radar does and does not do,
+ * Landing footer: mark, one honest line about what ThreadHunt does and does not do,
  * and anchor links. Plain, no newsletter, no social wall.
  */
 

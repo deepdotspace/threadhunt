@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Reply Radar — keyboard-first reply triage. Dark is the primary theme; the
+  ThreadHunt — keyboard-first reply triage. Dark is the primary theme; the
   persisted mode is applied before first paint by the inline boot script
   below (no FOUC). Mode values live in src/themes.css.
 -->
@@ -9,7 +9,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
-    <title>Reply Radar</title>
+    <title>ThreadHunt</title>
 
     <!-- Display = Space Grotesk, UI = Public Sans (both 400/500/600/700). -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -23,7 +23,7 @@
       // Apply the persisted mode (default dark) before first paint.
       (function () {
         try {
-          var m = localStorage.getItem('reply-radar-theme')
+          var m = localStorage.getItem('threadhunt-theme')
           if (m !== 'light') m = 'dark'
           document.documentElement.setAttribute('data-theme', m)
           document.documentElement.style.colorScheme = m

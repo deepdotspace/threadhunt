@@ -6,7 +6,7 @@ import { useTheme } from '../../lib/theme'
 
 /*
  * Theme toggle. 32x32 round button. Shows the sun in dark mode (click
- * to go light) and the moon in light mode (click to go dark). Reply Radar locks a
+ * to go light) and the moon in light mode (click to go dark). ThreadHunt locks a
  * single direction, so this is the only theme control.
  */
 function ThemeToggle({ className, ...props }: React.HTMLAttributes<HTMLButtonElement>) {

@@ -3,11 +3,11 @@ import { captureConsoleErrors } from './helpers/errors'
 import { signInWithEmail, seedSampleData, HAS_TEST_ACCOUNT } from './helpers/auth'
 
 /**
- * Smoke tests for the real Reply Radar UI.
+ * Smoke tests for the real ThreadHunt UI.
  *
  * Signed-out visitors get the marketing landing at /. The signed-in app lives
  * under the (protected) routes behind AuthGate: an AppShell with a sidebar
- * <aside> (Reply Radar mark, topics list, History, Settings) inside the
+ * <aside> (ThreadHunt mark, topics list, History, Settings) inside the
  * data-testid="app-root" container.
  *
  * Assertions lean on roles/text/testid rather than pixel/order so they survive
@@ -66,10 +66,10 @@ test.describe('Signed-in app', () => {
     await page.goto('/topics')
     await waitForShell(page)
     await expect(page.locator(APP_ROOT)).toBeVisible()
-    // The sidebar carries the Reply Radar mark + wordmark.
+    // The sidebar carries the ThreadHunt mark + wordmark.
     const sidebar = page.locator('aside')
     await expect(sidebar).toBeVisible()
-    await expect(sidebar.getByText('Reply Radar', { exact: true })).toBeVisible()
+    await expect(sidebar.getByText('ThreadHunt', { exact: true })).toBeVisible()
   })
 
   test('sidebar exposes New topic, History, and Settings nav', async ({ page }) => {

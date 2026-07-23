@@ -42,7 +42,7 @@ export default function TopicQueuePage() {
   // Resizable list pane: drag the divider to size the panes; width is persisted.
   const splitRef = useRef<HTMLDivElement>(null)
   const [listWidth, setListWidth] = useState(() => {
-    const v = Number(localStorage.getItem('reply-radar-queue-list-width'))
+    const v = Number(localStorage.getItem('threadhunt-queue-list-width'))
     return v >= 340 && v <= 720 ? v : 452
   })
   const handleListResize = useCallback((clientX: number) => {
@@ -51,7 +51,7 @@ export default function TopicQueuePage() {
     const w = Math.max(340, Math.min(720, clientX - rect.left))
     setListWidth(w)
     try {
-      localStorage.setItem('reply-radar-queue-list-width', String(w))
+      localStorage.setItem('threadhunt-queue-list-width', String(w))
     } catch {
       /* ignore */
     }

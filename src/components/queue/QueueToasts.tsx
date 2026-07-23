@@ -1,5 +1,5 @@
 /*
- * Reply Radar queue toasts. Bottom-center over the detail pane,
+ * ThreadHunt queue toasts. Bottom-center over the detail pane,
  * bg-3 with the elevation shadow, entering with rs-toast. Two kinds: an undo
  * toast (label + Undo button) shown after a skip, and a flash toast (leading
  * check + text) shown after a copy. Auto-dismiss is owned by the page.

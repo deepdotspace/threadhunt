@@ -178,7 +178,7 @@ export function ConfirmModal({
         <Button variant="ghost" onClick={onClose} disabled={loading}>
           {cancelText}
         </Button>
-        {/* Reply Radar has no danger color; both confirm variants use the accent. */}
+        {/* ThreadHunt has no danger color; both confirm variants use the accent. */}
         <Button variant="primary" onClick={onConfirm} loading={loading}>
           {confirmText}
         </Button>

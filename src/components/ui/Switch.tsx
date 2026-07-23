@@ -4,7 +4,7 @@ import * as SwitchPrimitives from '@radix-ui/react-switch'
 import { cn } from './utils'
 
 /*
- * Reply Radar toggle. On = accent track with an on-accent thumb; off = bg-3 track.
+ * ThreadHunt toggle. On = accent track with an on-accent thumb; off = bg-3 track.
  */
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,

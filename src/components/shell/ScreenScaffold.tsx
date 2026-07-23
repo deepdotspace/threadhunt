@@ -1,5 +1,5 @@
 /*
- * Shared chrome for placeholder screens: the 54px Reply Radar header plus a
+ * Shared chrome for placeholder screens: the 54px ThreadHunt header plus a
  * centered "coming next" note. The real screen bodies replace these in a later
  * round; the header keeps navigation legible meanwhile.
  */

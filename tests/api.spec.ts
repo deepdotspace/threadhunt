@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { signInWithEmail, callAction, seedSampleData, HAS_TEST_ACCOUNT } from './helpers/auth'
 
 /**
- * API-layer tests. Clients never write records directly in Reply Radar; every
+ * API-layer tests. Clients never write records directly in ThreadHunt; every
  * mutation flows through server actions (POST /api/actions/:name) that verify
  * ownership. These exercise the auth proxy and a real action round-trip.
  */

@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from './utils'
 
 /*
- * Reply Radar badge. The default is a soft accent pill; `neutral` is a bg-3 chip.
+ * ThreadHunt badge. The default is a soft accent pill; `neutral` is a bg-3 chip.
  * For the History action badges (posted / edited / skipped) use StatusBadge.
  */
 const badgeVariants = cva(

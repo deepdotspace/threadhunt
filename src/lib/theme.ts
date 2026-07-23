@@ -1,5 +1,5 @@
 /*
- * Theme (mode) controller for Reply Radar.
+ * Theme (mode) controller for ThreadHunt.
  *
  * Dark is the default. The choice persists in localStorage and is mirrored
  * onto <html data-theme> plus root.style.colorScheme so native form controls
@@ -31,7 +31,7 @@ export function setTheme(mode: ThemeMode): void {
   } catch {
     // Private mode / storage disabled: in-memory only is acceptable.
   }
-  window.dispatchEvent(new Event('reply-radar-theme-change'))
+  window.dispatchEvent(new Event('threadhunt-theme-change'))
 }
 
 export function toggleTheme(): void {
@@ -39,8 +39,8 @@ export function toggleTheme(): void {
 }
 
 function subscribe(cb: () => void): () => void {
-  window.addEventListener('reply-radar-theme-change', cb)
-  return () => window.removeEventListener('reply-radar-theme-change', cb)
+  window.addEventListener('threadhunt-theme-change', cb)
+  return () => window.removeEventListener('threadhunt-theme-change', cb)
 }
 
 /** Reactive hook: current mode plus setter/toggle. */

@@ -95,10 +95,10 @@ export default function HistoryPage() {
     const count = filtered.length
     const plural = count === 1 ? 'entry' : 'entries'
     if (kind === 'csv') {
-      downloadFile('reply-radar-history.csv', 'text/csv', toCsv(filtered))
+      downloadFile('threadhunt-history.csv', 'text/csv', toCsv(filtered))
       success(`Exported ${count} ${plural} as CSV.`)
     } else if (kind === 'json') {
-      downloadFile('reply-radar-history.json', 'application/json', toJson(filtered))
+      downloadFile('threadhunt-history.json', 'application/json', toJson(filtered))
       success(`Exported ${count} ${plural} as JSON.`)
     } else {
       void navigator.clipboard?.writeText(toClipboardText(filtered))

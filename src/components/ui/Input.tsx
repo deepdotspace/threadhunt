@@ -3,7 +3,7 @@ import * as React from 'react'
 import { cn } from './utils'
 
 /*
- * Reply Radar text input. Raised bg-2 surface, stronger hairline border, accent
+ * ThreadHunt text input. Raised bg-2 surface, stronger hairline border, accent
  * border on focus. 14px UI face.
  */
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(

@@ -19,7 +19,7 @@ export function HowItWorks() {
       <Eyebrow>How it works</Eyebrow>
       <SectionHeading>Four steps from a question to a posted reply.</SectionHeading>
       <p className="mt-4 max-w-[560px] text-[15px] leading-relaxed text-[var(--text-2)]">
-        You set the intent once. Reply Radar does the searching and scoring on a
+        You set the intent once. ThreadHunt does the searching and scoring on a
         schedule. The reply is always yours to write and send.
       </p>
 

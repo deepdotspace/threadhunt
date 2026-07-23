@@ -1,5 +1,5 @@
 /*
- * Reply Radar landing — the public face for signed-out visitors. Composes the hero
+ * ThreadHunt landing — the public face for signed-out visitors. Composes the hero
  * (with the live triage demo) and the story sections, and opens the SDK sign-in
  * overlay on any Get started action. The overlay themes with the host app.
  */

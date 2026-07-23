@@ -1,7 +1,7 @@
 /*
  * DEV-ONLY design-system preview. Not part of the product.
  *
- * Renders the full Reply Radar palette plus every shared UI primitive in BOTH
+ * Renders the full ThreadHunt palette plus every shared UI primitive in BOTH
  * themes side by side so the tokens can be screenshot-verified. Each column
  * scopes its own `data-theme`, so dark and light render at once regardless of
  * the app's active mode. Reachable at /preview via src/pages/preview.tsx.
@@ -94,7 +94,7 @@ function Showcase({ mode }: { mode: ThemeMode }) {
           S
         </span>
         <div className="leading-tight">
-          <div className="font-display text-[16px] font-bold tracking-[-0.02em]">Reply Radar</div>
+          <div className="font-display text-[16px] font-bold tracking-[-0.02em]">ThreadHunt</div>
           <div className="text-[11px] text-[var(--text-3)]">Reply triage</div>
         </div>
         <span className="ml-auto rounded-full bg-[var(--bg-2)] px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.1em] text-[var(--text-3)]">
@@ -281,7 +281,7 @@ export default function Preview() {
   return (
     <div className="min-h-screen w-full">
       <div className="border-b border-[var(--border-2)] bg-[var(--bg-0)] px-6 py-2 text-[12px] font-semibold uppercase tracking-[0.15em] text-[var(--text-3)]">
-        Reply Radar design system · dev preview · not a product screen
+        ThreadHunt design system · dev preview · not a product screen
       </div>
       <div className="flex w-full items-stretch">
         <Showcase mode="dark" />

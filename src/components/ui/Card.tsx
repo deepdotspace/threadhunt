@@ -3,7 +3,7 @@ import * as React from 'react'
 import { cn } from './utils'
 
 /*
- * Reply Radar surface card. Raised bg-2 with a hairline border and the 7px radius.
+ * ThreadHunt surface card. Raised bg-2 with a hairline border and the 7px radius.
  * Elevation is the surface layer + border, not a heavy shadow.
  */
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(

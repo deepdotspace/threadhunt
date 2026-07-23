@@ -1,8 +1,8 @@
 /*
- * Reply Radar theme model — two modes, dark (primary) and light.
+ * ThreadHunt theme model — two modes, dark (primary) and light.
  *
  * Mode lives on <html data-theme>. There is no multi-direction switcher;
- * Reply Radar is the only direction. Color values live in src/themes.css.
+ * ThreadHunt is the only direction. Color values live in src/themes.css.
  * This file is the typed metadata + the source/type lookups screens reuse.
  */
 
@@ -14,13 +14,13 @@ export type ThemeMode = 'dark' | 'light'
 export const BRAND = {
   name: APP_DISPLAY_NAME,
   tag: 'Reply triage',
-  glyph: 'R',
+  glyph: 'T',
 } as const
 
 /** localStorage key for the persisted mode choice. */
 export const THEME_STORAGE_KEY = `${APP_NAME}-theme`
 
-/** The five discussion sources Reply Radar triages, in display order. */
+/** The five discussion sources ThreadHunt triages, in display order. */
 export const SOURCES = [
   { id: 'reddit', letter: 'R', label: 'Reddit', onLight: false },
   { id: 'hn', letter: 'H', label: 'Hacker News', onLight: false },

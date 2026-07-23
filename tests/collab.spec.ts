@@ -1,7 +1,7 @@
 /**
  * Multi-user isolation spec.
  *
- * Reply Radar is a single-user tool: every topic/candidate/decision is scoped to its
+ * ThreadHunt is a single-user tool: every topic/candidate/decision is scoped to its
  * ownerUserId (schemas scope read to its owner), so there is no shared room. This spec
  * verifies the per-user boundary holds: two accounts sign in to separate browser
  * contexts, each lands its own signed-in shell, and each sidebar shows its own
