@@ -36,7 +36,7 @@ bindings = [
 
 [vars]
 APP_NAME = "threadhunt"
-DEEPSPACE_APP_ID = "threadhunt"
+DEEPSPACE_APP_ID = "app_01KZ4F8J6M5SZ112PBNPG4WZE7"
 
 [dev]
 port = 8780
