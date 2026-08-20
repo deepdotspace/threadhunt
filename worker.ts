@@ -32,6 +32,7 @@ import { tasks as cronTasks, runTask as runCronTask } from './src/cron.js'
 import { runJob } from './src/jobs.js'
 import { schemas } from './src/schemas.js'
 import { integrations } from './src/integrations.js'
+import { cronRoomName, createCronArmer } from './src/lib/cron-arm.js'
 
 // =============================================================================
 // DO Manifest — declares all Durable Objects for dynamic deploy bindings
@@ -190,6 +191,47 @@ export type AppContext = { Bindings: Env }
 
 const app = new Hono<AppContext>()
 app.use('/api/*', cors())
+
+// ---------------------------------------------------------------------------
+// Arm the cron room
+//
+// Without this the `tick` task in src/cron.ts never runs: CronRoom only
+// schedules its first alarm when the DO is first touched, and nothing else in
+// ThreadHunt ever touches it. See src/lib/cron-arm.ts for the full why.
+//
+// Mounted on /api/* rather than * on purpose. Arming is a one-shot event that
+// self-perpetuates once it lands, so it does not need the widest possible
+// request surface — it needs the requests that mean somebody is actually using
+// the app. Every real session hits /api/* within the first second: the SDK
+// client fetches /api/auth/token on boot and every mutation in src/lib/api.ts
+// posts to /api/actions/*. Meanwhile ThreadHunt serves a public landing page,
+// and an anonymous marketing pageview — or a crawler hitting it — must not be
+// what starts owner-billed Exa and Firecrawl scans. /api/* also keeps the ping
+// off the static-asset path, where it would fire on the first stylesheet
+// request of every new isolate.
+// ---------------------------------------------------------------------------
+
+const armCron = createCronArmer()
+
+app.use('/api/*', async (c, next) => {
+  const arming = armCron(() => {
+    const ns = c.env.CRON_ROOMS
+    return ns.get(ns.idFromName(cronRoomName(c.env.APP_NAME))).fetch('https://cron-arm/ping')
+  })
+  // waitUntil, never await: arming must not sit in front of the response.
+  // `c.executionCtx` throws when the app is driven without one (a unit test
+  // calling app.fetch(request, env) with two arguments); the ping is already in
+  // flight by then, and a missing ExecutionContext must not turn a real route
+  // into a 500 just because arming rode along on it.
+  if (arming) {
+    try {
+      c.executionCtx.waitUntil(arming)
+    } catch {
+      /* no ExecutionContext to hand it to; the ping runs detached */
+    }
+  }
+  await next()
+})
 
 // ---------------------------------------------------------------------------
 // Auth
