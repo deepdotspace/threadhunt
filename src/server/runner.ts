@@ -52,16 +52,37 @@ export async function enqueueScan(env: Env, topic: Envelope<TopicData>): Promise
  * Cron tick. Enqueue a scan job for every non-paused topic whose nextDueAt has
  * passed, capped per tick, then advance the schedule (lastScanAt unset; the job
  * stamps it). One topic's failure never kills the rest of the tick.
+ *
+ * Every scan is owner-billed Exa/Firecrawl search plus Haiku judging, so two
+ * properties matter more than anything else here and are pinned in runner.test.ts:
+ *
+ *  - A topic that is months overdue produces ONE scan, not one per missed slot.
+ *    advanceSchedule computes the next slot from `now` rather than from the slot
+ *    it just fired, so a backlog collapses to a single catch-up run and then
+ *    resyncs to the present. Missed scans are missed; nobody wants sixty
+ *    re-runs of the same queries.
+ *  - A tick can start at most FUNNEL.maxTopicsPerTick scans however many topics
+ *    are due, so a pile of overdue topics drains at one an hour instead of all
+ *    at once.
  */
 export async function runDueScans(env: Env): Promise<void> {
   const ctx = ownerContext(env)
   const now = Date.now()
 
-  const topics = (await ctx.records.query('topics', {
-    where: { paused: false },
-  })) as Envelope<TopicData>[]
+  // Read every topic and drop the paused ones here, not in the query.
+  //
+  // `paused` is a boolean-INTERPRETED number column, so the DO stores 0/1 and
+  // hands 0/1 back, and RecordRoom binds a `where` value straight into the SQL
+  // with no coercion. `where: { paused: false }` therefore compares the column
+  // against a bound JS boolean and matches nothing at all — which meant this
+  // tick would have found no work ever, however overdue the topics were.
+  // Confirmed against production on 2026-08-20: `where: { paused: false }`
+  // returns 0 rows for the one live topic, `where: { paused: 0 }` returns it.
+  // A plain truthiness check reads correctly for 0, 1, false, true and a
+  // missing column alike, and cannot rot if the column's storage changes.
+  const topics = (await ctx.records.query('topics')) as Envelope<TopicData>[]
   const due = topics
-    .filter((t) => (t.data.nextDueAt ?? 0) <= now)
+    .filter((t) => !t.data.paused && (t.data.nextDueAt ?? 0) <= now)
     .slice(0, FUNNEL.maxTopicsPerTick)
 
   for (const topic of due) {
