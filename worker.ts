@@ -22,7 +22,7 @@ import {
   platformWorkerFetch,
   authWorkerFetch,
   authenticatedRoomRequest,
-  resolveAppRole,
+  resolveAppRole as sdkResolveAppRole,
 } from 'deepspace/worker'
 import type { JwtVerifierConfig, VerifyResult } from 'deepspace/worker'
 import { RecordRoom, YjsRoom, CanvasRoom, PresenceRoom, CronRoom, JobRoom } from 'deepspace/worker'
@@ -58,12 +58,15 @@ export const __DO_MANIFEST__ = [
  * holds our user rows — otherwise every non-owner silently resolves to
  * 'viewer' against an empty DO.
  */
-function appRoleEnv(env: Env) {
-  return {
-    RECORD_ROOMS: env.RECORD_ROOMS,
-    OWNER_USER_ID: env.OWNER_USER_ID,
-    DEEPSPACE_APP_ID: env.APP_NAME,
-  }
+function resolveAppRole(env: Env, userId: string) {
+  return sdkResolveAppRole(
+    {
+      RECORD_ROOMS: env.RECORD_ROOMS,
+      OWNER_USER_ID: env.OWNER_USER_ID,
+      DEEPSPACE_APP_ID: env.APP_NAME,
+    },
+    userId,
+  )
 }
 export class AppRecordRoom extends RecordRoom<Env> {
   constructor(state: DurableObjectState, env: Env) {
@@ -103,15 +106,16 @@ export class AppCronRoom extends CronRoom<Env> {
  * `useJobs('app:<APP_NAME>')` hook; server-side code uses the
  * `enqueueJob` helper from 'deepspace/worker'.
  */
+// Job mutations - and, since authorizeRead defaults to authorizeWrite, the queue
+// snapshot too - are gated on the user's real app role. Anonymous connections
+// never qualify. `resolveAppRole` below is the local wrapper that points the SDK
+// helper at `app:${APP_NAME}`, not the raw export.
 export class AppJobRoom extends JobRoom<Env> {
   constructor(state: DurableObjectState, env: Env) {
     super(state, env, {
-      // Job mutations (and, since authorizeRead defaults to this, the queue
-      // snapshot) are gated on the user's real app role. Anonymous connections
-      // never qualify.
       authorizeWrite: async (user) => {
         if (user.userId.startsWith('anon-')) return false
-        const role = await resolveAppRole(appRoleEnv(env), user.userId)
+        const role = await resolveAppRole(env, user.userId)
         return role === 'member' || role === 'admin'
       },
     })
@@ -330,7 +334,7 @@ app.all('/api/debug/*', async (c) => {
   }
   const auth = await resolveAuth(c.req.raw, c.env)
   if (!auth) return c.json({ error: 'unauthorized' }, 401)
-  if ((await resolveAppRole(appRoleEnv(c.env), auth.userId)) !== 'admin') {
+  if ((await resolveAppRole(c.env, auth.userId)) !== 'admin') {
     return c.json({ error: 'forbidden' }, 403)
   }
   const stub = c.env.RECORD_ROOMS.get(c.env.RECORD_ROOMS.idFromName(`app:${c.env.APP_NAME}`))
@@ -571,7 +575,7 @@ app.get(
   '/ws/canvas/:docId',
   wsRoute(
     (env) => env.CANVAS_ROOMS,
-    async (auth, env) => ({ role: await resolveAppRole(appRoleEnv(env), auth.userId) }),
+    async (auth, env) => ({ role: await resolveAppRole(env, auth.userId) }),
   ),
 )
 
@@ -592,7 +596,7 @@ app.get(
     // become viewers, which CronRoom enforces as read-only. Apps that want
     // stricter access (e.g. owner-only) should replace this with an inline
     // handler that resolves role from app state — see /ws/yjs for the pattern.
-    async (auth, env) => ({ role: await resolveAppRole(appRoleEnv(env), auth.userId) }),
+    async (auth, env) => ({ role: await resolveAppRole(env, auth.userId) }),
   ),
 )
 
