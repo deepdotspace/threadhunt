@@ -120,18 +120,27 @@ export const FUNNEL = {
   // Job chunking: stay under the worker subrequest ceiling per alarm tick.
   searchesPerChunk: 8, // searches before yielding
   judgeThreadsPerChunk: 20, // threads judged before yielding
-  // Cost control. Firecrawl bills per CALL, not per result, so a scan costs
-  // one search per (query x venue) pair: 8 queries x 5 venues is 40 searches.
-  // See SEARCH_COST_USD for what that is worth in dollars.
-  maxSearchesPerScan: 16, // ceiling per scan; truncation is logged, never silent
+  // Cost control. A scan costs one search per (query x venue) pair, so the pair
+  // count is the bill: 8 queries x 5 venues is 40 searches, about 8.6 cents.
+  // The ceiling is a backstop against a runaway topic, not a budget -- keep it
+  // at or above the real maximum so it never quietly narrows a scan.
+  maxSearchesPerScan: 40, // 8 queries x 5 venues; truncation is logged, never silent
   abortScanAfterFailedSearches: 2, // consecutive failures mean the provider is down
 } as const
 
-// Measured owner-billed cost of one `firecrawl/search`, whatever `limit` says.
-// The proxy bills pass-through actual cost, so this is an observation, not a
-// quoted rate: on 2026-08-25 a limit=1 call and a limit=30 call each billed
-// $0.65. TODO: re-check against dashboard.deep.space before trusting estimates.
-export const SEARCH_COST_USD = 0.65
+// Owner-billed cost of one `firecrawl/search`, from the platform source rather
+// than a guess: search is ~2 Firecrawl credits at $0.00083/credit
+// (api-worker/src/integrations/firecrawl/index.ts), times the platform's 1.3
+// integration markup (billing/integration-pricing.ts COST_MARKUP.integration).
+// 2 * 0.00083 * 1.3 = 0.00216. `limit` does not change it.
+export const SEARCH_COST_USD = 0.00216
+
+// What a FAILED firecrawl call bills. A 402 from the provider is charged a flat
+// $0.65 -- 300x a real search -- and it sticks. Two probes on 2026-08-25 on
+// different endpoints (search and scrape) each billed exactly this, which is
+// how ~1,000 failed calls became 98% of a $681 bill. This is the number
+// abortScanAfterFailedSearches exists to bound.
+export const FAILED_CALL_COST_USD = 0.65
 
 export const DEFAULTS = {
   venues: ['reddit', 'hackernews'] as Venue[],

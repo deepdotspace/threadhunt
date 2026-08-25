@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { scanTick, emptyStats, buildPairs, type ScanState } from './engine'
-import { FUNNEL } from '../config'
+import { FUNNEL, VENUE_DOMAINS } from '../config'
 import type { TopicData } from '../types'
 
 /**
@@ -67,7 +67,15 @@ describe('searchTick cost guards', () => {
     expect(state.stage).toBe('judge')
   })
 
-  it('never buys more searches in one scan than the per-scan ceiling', async () => {
+  it('keeps the ceiling at or above the largest topic a user can build', () => {
+    // The ceiling is a backstop, not a budget. Setting it below what a legal
+    // topic asks for silently narrows every scan to the first few queries,
+    // which reads as "the app found nothing" rather than "we stopped looking".
+    const maxVenues = Object.keys(VENUE_DOMAINS).length
+    expect(FUNNEL.maxSearchesPerScan).toBeGreaterThanOrEqual(FUNNEL.queriesPerTopic * maxVenues)
+  })
+
+  it('searches every query x venue pair when the ceiling allows', async () => {
     const calls: string[] = []
     const ctx = {
       records: { query: async () => [], create: async () => ({}), update: async () => ({}), delete: async () => ({}) },
@@ -84,8 +92,8 @@ describe('searchTick cost guards', () => {
       const r = await scanTick({} as never, ctx as never, { topic: topic(), recencyDays: 14, state })
       state = r.state
     }
-    // 8 queries x 5 venues = 40 pairs, which the ceiling must clamp.
+    // 8 queries x 5 venues = 40 pairs, and all 40 must actually be searched.
     expect(buildPairs(topic().data).length).toBe(40)
-    expect(calls.length).toBe(FUNNEL.maxSearchesPerScan)
+    expect(calls.length).toBe(40)
   })
 })
