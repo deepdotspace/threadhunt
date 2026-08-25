@@ -33,6 +33,7 @@ import { runJob } from './src/jobs.js'
 import { schemas } from './src/schemas.js'
 import { integrations } from './src/integrations.js'
 import { cronRoomName, createCronArmer } from './src/lib/cron-arm.js'
+import { opsSummary, ownerContext, scansPaused, setScansPaused } from './src/server/ops.js'
 
 // =============================================================================
 // DO Manifest — declares all Durable Objects for dynamic deploy bindings
@@ -181,6 +182,11 @@ export interface Env extends DOBindings<typeof __DO_MANIFEST__> {
    * debug routes by default.
    */
   ALLOW_DEBUG_ROUTES?: string
+  /**
+   * Shared secret for /api/ops/*. Set with `deepspace secrets set OPS_SECRET=...`.
+   * Unset means the ops routes 404, so an app that never sets it is unchanged.
+   */
+  OPS_SECRET?: string
 }
 
 export type AppContext = { Bindings: Env }
@@ -383,6 +389,41 @@ app.all('/api/debug/*', async (c) => {
   // Forward verbatim, preserving method, headers, body, and the full URL
   // (the DO's debug handler dispatches on url.pathname).
   return stub.fetch(c.req.raw)
+})
+
+// ---------------------------------------------------------------------------
+// Ops — spend triage and the scan kill switch
+//
+// Scanning is the only thing in ThreadHunt that spends money (one billed
+// firecrawl search per query x venue pair), and nothing in the product surfaces
+// that. These two routes let the owner see the bill coming and stop it from a
+// terminal, without a deploy and without waiting on the cron.
+//
+// Authenticated by a shared secret rather than a user JWT so it works headless.
+// No secret set means no routes at all.
+// ---------------------------------------------------------------------------
+
+function opsAuthorized(c: { env: Env; req: { header: (n: string) => string | undefined } }): boolean {
+  const secret = c.env.OPS_SECRET
+  return Boolean(secret) && c.req.header('X-Ops-Secret') === secret
+}
+
+app.get('/api/ops/summary', async (c) => {
+  if (!c.env.OPS_SECRET) return c.notFound()
+  if (!opsAuthorized(c)) return c.json({ error: 'unauthorized' }, 401)
+  return c.json(await opsSummary(c.env, ownerContext(c.env)))
+})
+
+app.post('/api/ops/pause', async (c) => {
+  if (!c.env.OPS_SECRET) return c.notFound()
+  if (!opsAuthorized(c)) return c.json({ error: 'unauthorized' }, 401)
+  const body = await c.req.json<{ paused?: boolean }>().catch(() => ({}) as { paused?: boolean })
+  if (typeof body.paused !== 'boolean') {
+    return c.json({ error: 'body must be {"paused": true|false}' }, 400)
+  }
+  const ctx = ownerContext(c.env)
+  await setScansPaused(ctx, body.paused)
+  return c.json({ ok: true, scansPaused: await scansPaused(ctx) })
 })
 
 // ---------------------------------------------------------------------------

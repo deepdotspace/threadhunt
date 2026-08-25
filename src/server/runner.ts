@@ -5,19 +5,15 @@
  * each topic's nextDueAt to the next slot.
  */
 
-import { buildCronContext, enqueueJob } from 'deepspace/worker'
+import { enqueueJob } from 'deepspace/worker'
 import type { CronContext } from 'deepspace/worker'
 import { FUNNEL } from '../config'
 import type { TopicData } from '../types'
 import type { Env } from '../../worker'
 import { computeNextDueAt } from './schedule'
+import { ownerContext, scansPaused } from './ops'
 
 type Envelope<T> = { recordId: string; data: T }
-
-/** Owner cron context, bound to the app's shared RecordRoom. */
-function ownerContext(env: Env): CronContext {
-  return buildCronContext(env, env.OWNER_USER_ID, `app:${env.APP_NAME}`)
-}
 
 /** Schedule the next run for a topic from its cadence and preferred time. */
 async function advanceSchedule(
@@ -67,6 +63,14 @@ export async function enqueueScan(env: Env, topic: Envelope<TopicData>): Promise
  */
 export async function runDueScans(env: Env): Promise<void> {
   const ctx = ownerContext(env)
+
+  // The kill switch. Scans are the only thing in this app that spends money,
+  // so the owner gets to stop them from outside without waiting for a deploy.
+  if (await scansPaused(ctx)) {
+    console.warn('[runner] scans are paused; skipping this tick')
+    return
+  }
+
   const now = Date.now()
 
   // Read every topic and drop the paused ones here, not in the query.
