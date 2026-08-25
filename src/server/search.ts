@@ -6,6 +6,8 @@
  *
  * Firecrawl search returns no post body (scrape is blocked on Reddit and a
  * no-op on search), so the excerpt is the Google snippet (`description`).
+ * Billing is per call, not per result, so `limit` is free and the pair count
+ * is what costs money.
  * `firecrawl/search` returns `{ data: { data: [{ url, metadata }] } }`; the
  * proxy may hand back the inner object or the array, so we locate it defensively.
  */
@@ -102,13 +104,12 @@ export async function searchVenue(
   if (!VENUE_DOMAINS[venue]) return []
   const query = `${opts.query} site:${VENUE_DOMAINS[venue]}${afterOperator(opts.recencyDays)}`
 
-  let res: unknown
-  try {
-    res = await call('firecrawl/search', { query, limit: opts.resultsPerQuery })
-  } catch (err) {
-    console.error(`[search] firecrawl failed for "${opts.query}" on ${venue}:`, err)
-    return []
-  }
+  // Failures propagate on purpose. Returning [] here reads to the caller as
+  // "this query found nothing", which is indistinguishable from a total
+  // provider outage - so the scan would keep buying the remaining
+  // (query x venue) pairs at full price and surface no results either way.
+  // The caller decides how many failures are worth paying for.
+  const res = await call('firecrawl/search', { query, limit: opts.resultsPerQuery })
 
   const raw = extractResults(res)
   if (!raw) return []

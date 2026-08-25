@@ -64,7 +64,7 @@ function topic(over: Partial<TopicData> & { recordId?: string } = {}): TopicRow 
  * schedule advance so a test can assert the topic actually moved into the
  * future rather than onto the next stale slot.
  */
-function harness(rows: TopicRow[]) {
+function harness(rows: TopicRow[], scansPaused = false) {
   const updates: Array<{ recordId: string; data: Record<string, unknown> }> = []
   const queries: Array<unknown> = []
 
@@ -72,6 +72,13 @@ function harness(rows: TopicRow[]) {
     ownerUserId: 'owner',
     records: {
       query: vi.fn(async (collection: string, opts?: { where?: Record<string, unknown> }) => {
+        // The kill switch is read first, from its own collection. Serve it
+        // here rather than letting the assertion below throw into
+        // scansPaused's catch, which would report "not paused" either way and
+        // make a broken switch look like a working one.
+        if (collection === 'settings') {
+          return [{ recordId: 'st_1', data: { key: 'scansPaused', value: String(scansPaused) } }]
+        }
         expect(collection).toBe('topics')
         queries.push(opts)
         let out = rows
@@ -320,5 +327,21 @@ describe('computeNextDueAt — always lands in the future', () => {
   it('tolerates a malformed timeOfDay by falling back to an even interval', () => {
     expect(computeNextDueAt(NOW, 2, '99:99')).toBe(NOW + DAY / 2)
     expect(computeNextDueAt(NOW, 2, 'noon')).toBe(NOW + DAY / 2)
+  })
+})
+
+describe('the scan kill switch', () => {
+  it('starts no scans at all while scanning is paused', async () => {
+    const { env, updates } = harness([topic(), topic(), topic()], true)
+    await runDueScans(env)
+    expect(scannedTopicIds()).toEqual([])
+    // Nothing may advance either, or a resume would find every topic overdue.
+    expect(updates).toEqual([])
+  })
+
+  it('still scans when the switch is off', async () => {
+    const { env } = harness([topic()], false)
+    await runDueScans(env)
+    expect(scannedTopicIds()).toHaveLength(1)
   })
 })

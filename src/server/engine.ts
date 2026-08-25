@@ -64,6 +64,8 @@ export type ScanState = {
   queue: RawResult[]
   judged: number
   stats: ScanStats
+  /** Consecutive failed searches; resets on any success. Absent on old jobs. */
+  failures?: number
 }
 
 /** A fresh zeroed stats object. */
@@ -107,8 +109,19 @@ async function searchTick(
   const queueUrls = new Set(state.queue.map((t) => t.url))
   const budget = FUNNEL.judgeBudgetPerScan
 
+  // Every search is a billed call, so the pair count IS the bill. Cap it and
+  // say out loud what the cap dropped, rather than quietly searching less than
+  // the topic asked for.
+  const limit = Math.min(pairs.length, FUNNEL.maxSearchesPerScan)
+  if (state.cursor === 0 && pairs.length > limit) {
+    console.warn(
+      `[scan] topic ${topic.recordId}: ${pairs.length} query x venue pairs exceeds ` +
+        `maxSearchesPerScan=${limit}; skipping ${pairs.length - limit} this scan`,
+    )
+  }
+
   let done = 0
-  while (done < FUNNEL.searchesPerChunk && state.cursor < pairs.length) {
+  while (done < FUNNEL.searchesPerChunk && state.cursor < limit) {
     if (state.queue.length >= budget) break
     const { query, venue } = pairs[state.cursor]
     try {
@@ -118,6 +131,7 @@ async function searchTick(
         resultsPerQuery: FUNNEL.resultsPerVenueQuery,
         recencyDays,
       })
+      state.failures = 0
       state.stats.searches++
       state.stats.found += hits.length
       for (const hit of hits) {
@@ -130,13 +144,29 @@ async function searchTick(
       }
     } catch (err) {
       noteError(state.stats, err)
-      console.error(`[scan] search "${query}" on ${venue} failed:`, err)
+      // errMsg, not the raw error: the SDK wraps the provider's reply in the
+      // Error MESSAGE, and logging the object alone prints a bare stack. That
+      // is how a $0.65-per-call outage ran for days looking like empty results.
+      console.error(`[scan] search "${query}" on ${venue} failed: ${errMsg(err)}`)
+      state.failures = (state.failures ?? 0) + 1
+      // Every pair in a scan hits the same provider with the same credentials,
+      // so consecutive failures are the provider being down, not this query
+      // being unlucky. Stop buying the rest of the scan; judge what we have.
+      if (state.failures >= FUNNEL.abortScanAfterFailedSearches) {
+        console.error(
+          `[scan] topic ${topic.recordId}: aborting search after ${state.failures} ` +
+            `consecutive failures (${limit - state.cursor - 1} pairs unbought)`,
+        )
+        state.cursor = limit
+        state.stage = 'judge'
+        return
+      }
     }
     state.cursor++
     done++
   }
 
-  if (state.cursor >= pairs.length || state.queue.length >= budget) state.stage = 'judge'
+  if (state.cursor >= limit || state.queue.length >= budget) state.stage = 'judge'
 }
 
 /** One judge chunk: judge a slice, write seen_urls + candidates, draft in auto. */

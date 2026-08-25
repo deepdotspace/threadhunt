@@ -120,7 +120,18 @@ export const FUNNEL = {
   // Job chunking: stay under the worker subrequest ceiling per alarm tick.
   searchesPerChunk: 8, // searches before yielding
   judgeThreadsPerChunk: 20, // threads judged before yielding
+  // Cost control. Firecrawl bills per CALL, not per result, so a scan costs
+  // one search per (query x venue) pair: 8 queries x 5 venues is 40 searches.
+  // See SEARCH_COST_USD for what that is worth in dollars.
+  maxSearchesPerScan: 16, // ceiling per scan; truncation is logged, never silent
+  abortScanAfterFailedSearches: 2, // consecutive failures mean the provider is down
 } as const
+
+// Measured owner-billed cost of one `firecrawl/search`, whatever `limit` says.
+// The proxy bills pass-through actual cost, so this is an observation, not a
+// quoted rate: on 2026-08-25 a limit=1 call and a limit=30 call each billed
+// $0.65. TODO: re-check against dashboard.deep.space before trusting estimates.
+export const SEARCH_COST_USD = 0.65
 
 export const DEFAULTS = {
   venues: ['reddit', 'hackernews'] as Venue[],
