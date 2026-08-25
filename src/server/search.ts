@@ -4,10 +4,9 @@
  * filter per venue per query, which scales cleanly to high limits where the
  * combined OR query collapses. Each hit is mapped back to its Venue by hostname.
  *
- * Firecrawl search returns no post body (scrape is blocked on Reddit and a
- * no-op on search), so the excerpt is the Google snippet (`description`).
- * Billing is per call, not per result, so `limit` is free and the pair count
- * is what costs money.
+ * Scraping is disabled (`scrapeOptions.formats: []`): the excerpt is the Google
+ * snippet (`description`), so a scrape is cost with no benefit and it truncates
+ * the result set to whatever could be scraped in time.
  * `firecrawl/search` returns `{ data: { data: [{ url, metadata }] } }`; the
  * proxy may hand back the inner object or the array, so we locate it defensively.
  */
@@ -109,7 +108,15 @@ export async function searchVenue(
   // provider outage - so the scan would keep buying the remaining
   // (query x venue) pairs at full price and surface no results either way.
   // The caller decides how many failures are worth paying for.
-  const res = await call('firecrawl/search', { query, limit: opts.resultsPerQuery })
+  // Scrape off. We use the Google snippet as the excerpt and never read a post
+  // body, so scraping is pure cost -- and leaving it on also truncates the
+  // result set to whatever could be scraped in time, which loses slow Reddit
+  // pages. This matches the engine in the commercial build.
+  const res = await call('firecrawl/search', {
+    query,
+    limit: opts.resultsPerQuery,
+    scrapeOptions: { formats: [] },
+  })
 
   const raw = extractResults(res)
   if (!raw) return []
